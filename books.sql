@@ -18,27 +18,28 @@ USE `books`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `author`
+-- Table structure for table `authors`
 --
 
-DROP TABLE IF EXISTS `author`;
+DROP TABLE IF EXISTS `authors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `author` (
-  `author_id` int NOT NULL AUTO_INCREMENT,
-  `author_name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`author_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+CREATE TABLE `authors` (
+  `index` bigint DEFAULT NULL,
+  `id` bigint DEFAULT NULL,
+  `author_name` text,
+  KEY `ix_authors_index` (`index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `author`
+-- Dumping data for table `authors`
 --
 
-LOCK TABLES `author` WRITE;
-/*!40000 ALTER TABLE `author` DISABLE KEYS */;
-INSERT INTO `author` VALUES (1,'Stephen King'),(2,'F.Scott Fitgerald'),(3,'Jack London'),(4,'Jane Austen'),(5,'Mary Shelley');
-/*!40000 ALTER TABLE `author` ENABLE KEYS */;
+LOCK TABLES `authors` WRITE;
+/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
+INSERT INTO `authors` VALUES (0,1,'Stephen King'),(1,2,'F.Scott Fitgerald'),(2,3,'Jack London'),(3,4,'Jane Austen'),(4,5,'Mary Shelley');
+/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -49,14 +50,12 @@ DROP TABLE IF EXISTS `books`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `books` (
-  `books_id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(45) DEFAULT NULL,
-  `author_id` varchar(45) DEFAULT NULL,
-  `author_author_id` int NOT NULL,
-  PRIMARY KEY (`books_id`),
-  KEY `fk_Books_author1_idx` (`author_author_id`),
-  CONSTRAINT `fk_Books_author1` FOREIGN KEY (`author_author_id`) REFERENCES `author` (`author_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+  `index` bigint DEFAULT NULL,
+  `id` bigint DEFAULT NULL,
+  `title` text,
+  `author_id` bigint DEFAULT NULL,
+  KEY `ix_books_index` (`index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +64,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'The Shining',NULL,0),(2,'It',NULL,0),(3,'The Great Gatsby',NULL,0),(4,'The Call of the Wild',NULL,0),(5,'Pride and Prejudice',NULL,0),(6,'Frankenstein',NULL,0);
+INSERT INTO `books` VALUES (0,1,'The Shining',1),(1,2,'It',1),(2,3,'The Great Gatsby',2),(3,4,'The Call of the Wild',3),(4,5,'Pride and Prejudice',4),(5,6,'Frankenstein',5);
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,12 +76,10 @@ DROP TABLE IF EXISTS `favorites`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `favorites` (
-  `user_id` int DEFAULT NULL,
-  `book_id` int DEFAULT NULL,
-  KEY `user_id` (`user_id`),
-  KEY `book_id` (`book_id`),
-  CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `favorites_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`books_id`)
+  `index` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `book_id` bigint DEFAULT NULL,
+  KEY `ix_favorites_index` (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -92,66 +89,36 @@ CREATE TABLE `favorites` (
 
 LOCK TABLES `favorites` WRITE;
 /*!40000 ALTER TABLE `favorites` DISABLE KEYS */;
-INSERT INTO `favorites` VALUES (1,1),(1,2),(1,3),(2,4),(2,5),(3,5),(3,6);
+INSERT INTO `favorites` VALUES (0,1,1),(1,1,2),(2,1,3),(3,2,4),(4,2,5),(5,3,5),(6,3,6);
 /*!40000 ALTER TABLE `favorites` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(45) DEFAULT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'John','Doe','JD@books.com'),(2,'Robin','Smith','Robin@books.com'),(3,'Gloria','Rodriguez','grodriquez@books.com');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_has_books`
---
-
-DROP TABLE IF EXISTS `user_has_books`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_has_books` (
-  `User_user_id` int NOT NULL,
-  `Books_books_id` int NOT NULL,
-  PRIMARY KEY (`User_user_id`,`Books_books_id`),
-  KEY `fk_User_has_Books_Books1_idx` (`Books_books_id`),
-  KEY `fk_User_has_Books_User_idx` (`User_user_id`),
-  CONSTRAINT `fk_User_has_Books_Books1` FOREIGN KEY (`Books_books_id`) REFERENCES `books` (`books_id`),
-  CONSTRAINT `fk_User_has_Books_User` FOREIGN KEY (`User_user_id`) REFERENCES `user` (`user_id`)
+CREATE TABLE `users` (
+  `index` bigint DEFAULT NULL,
+  `id` bigint DEFAULT NULL,
+  `first_name` text,
+  `last_name` text,
+  `email` text,
+  KEY `ix_users_index` (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_has_books`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `user_has_books` WRITE;
-/*!40000 ALTER TABLE `user_has_books` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_has_books` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (0,1,'John','Doe','JD@books.com'),(1,2,'Robin','Smith','Robin@books.com'),(2,3,'Gloria','Rodriguez','grodriquez@books.com');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'books'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -162,4 +129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-29  9:53:24
+-- Dump completed on 2023-07-05 23:49:52
